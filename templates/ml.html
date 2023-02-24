@@ -1,0 +1,106 @@
+<!-- ML Model to Analyze Portfolio -->
+<!-- This is a HTML code that creates a website with a form to analyze portfolio using machine learning and gives stock recommendations,
+  with features such as a dropdown menu of stock names, fields to enter stock quantity, purchase price per share and submission buttons. -->
+
+  <!DOCTYPE html>
+<html lang="en">
+    <head>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+      <title>PortfolioQuantum by Sameer Dhoke</title>
+    </head>
+
+    <body>
+      <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{{ url_for('index') }}"><img src="{{url_for('static', filename='images/logo_portfolioquantum.png')}}" alt="logo"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active"> <a class="nav-link" style="padding-bottom: 20px; font-size: 18px;" href="{{ url_for('index') }}">Home</a> </li>
+            <li class="nav-item"> <a class="nav-link" style="font-size: 18px;" href="{{ url_for('ml1') }}">ML Model to Analyze Portfolio</a> </li>
+            <li class="nav-item"> <a class="nav-link" style="font-size: 18px;" href="{{ url_for('momentum1') }}">Quantitative Momentum Model</a> </li>
+            <li class="nav-item"> <a class="nav-link" style="font-size: 18px;" href="{{ url_for('value1') }}">Quantitative Value Model</a> </li>
+          </ul>
+        </div>
+      </nav>
+
+        <div class="container">
+
+        <div class="ml-page">
+            <h2 class="center">ML Model to analyze portfolio and give recommendations</h2>
+            <hr class="solid">
+            <p style="margin-bottom: 20px;">Please enter the information of at least 5 stocks. A portfolio of fewer than 5 stocks indicates that the portfolio needs to be more diversified and balanced.
+              <br>You can select stocks from the drop-down menu. Once you have submitted your portfolio information, you can see the analysis below.<br>If you have the same stocks purchased on different dates, add them separately with their respective purchase price.</p>
+
+            <form action="/mlmodel" method="POST" id="stock-form">
+              <label for="stock_name">Stock Name:</label><br>
+              <input type="text" name="stock_name" placeholder="Stock Name" list="options"> {{ html | safe }} <br>
+              <div class="error-message" style="color: #ff0000"> {% if error_msg %} {{ error_msg }} {% endif %} </div>
+              <label for="stock_quantity">Stock Quantity:</label><br>
+              <input type="number" name="stock_quantity" placeholder="Number of Shares" min="1"><br>
+              <label for="purchase_price_per_share">Purchase Price per Share:</label><br>
+              <input type="number" name="purchase_price_per_share" placeholder="Purchase price per share in USD" min="1"><br>
+              <input type="submit" value="Add Stock">
+              <input type="submit" name="done" value="Submit">
+              <div class="error-message" style="color: #ff0000"> {% if error %} {{ error }} {% endif %} </div>
+              <div class="error-message" style="color: #ff0000"> {% if error_m %} {{ error_m }} {% endif %} </div>
+            </form>
+      </div>
+
+        <div class="table-container" id="centered-table"> <h5>List of Stocks in your Portfolio</h5> {{ table | safe }} </div>
+        <div class="content"> <h3>Framework of Analysis in ML Model:</h3> </div>
+        <hr class="solid">
+
+        <h5 style="margin-top: 20px">Performance</h5>
+        <hr class="solid">
+        <div class="content">
+          <div style="display: flex;"> <div style="flex: 1;"> <h4 style="margin-right: 20px;">Current Value of portfolio in USD</h4> {{ current_value }} </div>
+          <div style="flex: 1;"> <h4>Amount Invested in USD</h4> {{ amount_invested }} </div>
+          <div style="flex: 1;"> <h4>Return on Investment for your Portfolio in %</h4> {{ portfolio_return }} </div>
+        </div>
+
+        <h5 style="margin-top: 20px">Portfolio Performance Metric</h5>
+        <hr class="solid">
+        <div style="display: flex;"> <div style="flex: 1;"> <h4 style="margin-right: 20px;">Mean Absolute Error (MAE)</h4> {{ mae }}</div>
+          <div style="flex: 1;"> <h4>Mean Squared Error (MSE)</h4> {{ mse }} </div>
+        </div>
+        <div style="display: flex;"> <div style="flex: 1;"> <h4 style="margin-right: 20px;">Root Mean Square Error (RMSE)</h4> {{ rmse }} </div>
+            <div style="flex: 1;"> <h4>Coefficient of determination (R2 score)</h4> {{ r2 }} </div>
+          </div>
+        </div>
+
+        <div class="content"> <h5>Interpretation of the metrics as mentioned above</h5> <hr class="solid"> {{ interpretation_metric }} </div>
+        <div class="content"> <h5>Investment Recommendation</h5> <hr class="solid"> {{ interpret_rec }} </div>
+
+        <h4 style="font-size: 14px"><em>Resources:</em></h4>
+        <p style="font-size: 14px"><em>Here are some resources on Quantitative Momentum Investing:</em></p>
+        <ul style="text-align: center">
+          <li class="indent" style="font-size: 14px"><em><a target="_blank" href="https://machinelearningmastery.com/linear-regression-for-machine-learning/">Linear Regression for Machine Learning</a> | machinelearningmastery.com</em></li>
+          <li class="indent" style="font-size: 14px"><em><a target="_blank" href="http://store.ectap.ro/articole/971.pdf">Using the regression model for the portfolios analysis</a> | Theoretical and Applied Economics </em></li>
+          <li class="indent" style="font-size: 14px"><em><a target="_blank" href="https://repository.usfca.edu/cgi/viewcontent.cgi?article=1007&context=fe">Portfolios and Regressions</a> | The University of San Francisco</em></li>
+        </ul>
+      </div>
+    </body>
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="{{url_for('static', filename='images/logo_portfolioquantum.png')}}" alt="Logo">
+          </div>
+          <div class="col-md-8">
+            <ul class="social-icons" style="padding-bottom: 9px; padding-top: 9px; float: right;">
+              <li style="float: left; margin-left: 0;"><a href="https://www.linkedin.com/in/sameer-dhoke/"><i class="fab fa-linkedin"></i></a></li>
+              <li style="float: left; margin-left: 10px;"><a href="https://github.com/sameerdhoke"><i class="fab fa-github"></i></a></li>
+              <li style="float: left; margin-left: 10px;"><a style= "color: #FFFFFF;" href="mailto:sameer.dhoke10@gmail.com">sameer.dhoke10@gmail.com</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+</html>

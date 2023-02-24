@@ -1,0 +1,16 @@
+cs50
+Flask
+Flask-Session
+requests
+pandas
+pandas_datareader
+yfinance
+fuzzywuzzy
+math
+random
+numpy
+scipy
+sklearn
+statistics
+matplotlib
+warnings

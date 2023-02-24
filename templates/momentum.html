@@ -1,0 +1,82 @@
+<!-- Quantitative Momentum Strategy -->
+<!-- The code is an HTML file for a website implementing a Quantitative Momentum Strategy which inputs portfolio value and generates a list of 50 high momentum stocks to
+  help identify high-performing investments for the portfolio. -->
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>PortfolioQuantum by Sameer Dhoke</title>
+  </head>
+
+  <body>
+
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="{{ url_for('index') }}"><img src="{{url_for('static', filename='images/logo_portfolioquantum.png')}}" alt="logo"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active"> <a class="nav-link" style="padding-bottom: 20px; font-size: 18px;" href="{{ url_for('index') }}">Home</a> </li>
+            <li class="nav-item"> <a class="nav-link" style="font-size: 18px;" href="{{ url_for('ml1') }}">ML Model to Analyze Portfolio</a> </li>
+            <li class="nav-item"> <a class="nav-link" style="font-size: 18px;" href="{{ url_for('momentum1') }}">Quantitative Momentum Model</a> </li>
+            <li class="nav-item"> <a class="nav-link" style="font-size: 18px;" href="{{ url_for('value1') }}">Quantitative Value Model</a> </li>
+          </ul>
+        </div>
+      </nav>
+
+    <div class="container">
+    <h4>Quantitative Momentum Strategy | 50 High Momentum Stocks</h4>
+    <hr class="solid" class="indent">
+    <p> Find the top 50 stocks with the highest price momentum using the quantitative momentum strategy. Identify high-performing investments for your portfolio. <br><br></p>
+    <div class="momentum-page">
+      <h4 class="center">Quantitative Momentum Model selects the 50 US stocks with the best momentum metrics.</h4>
+      <hr class="solid">
+      <form action="/momentummodel" method="POST">
+          <label for="port_v">Portfolio Value in USD</label><br>
+          <input type="number" name="port_v" placeholder="Portfolio value in USD" min="0"><br>
+          {% if message %} <div class="error"> {{ message }} </div> {% endif %}
+          <input type="submit" name="submit" value="Submit">
+      </form>
+    </div>
+
+    <p class="indent">Kindly enter the portfolio value above USD 5000 because if you input a lower portfolio value, the total value of the portfolio will not be sufficient to buy enough share of any of the stocks in the list and give a holistic picture of the momentum strategy.
+      This can result in all or most of the cells of the "Number of Shares to Buy" column showing "0". Please note, the transaction costs and any other costs that might be associated with buying the stocks are an additional cost over the price of the stocks.<br></p>
+    <div class="content"> <h4>Value of your Portfolio (in USD)</h4> {{ port_v }} </div>
+    <div class="table-container" id="centered-table">
+      <h4 class="indent">Identifying the 50 best momentum stocks from the S&P 500 index from the dataframe based on 4 momentum metrics, and dropping all stocks outside the top 50.</h4> {{ momentum_table | safe }} </div>
+    <div class="table-container" id="centered-table"> <h4>The list of the 50 best momentum stocks from the S&P 500 index you should consider based on the portfolio value you entered</h4> {{ final_momentum_table | safe }} </div>
+
+    <h4 style="font-size: 14px"><em>Resources:</em></h4>
+    <p style="font-size: 14px"><em>Here are some resources on Quantitative Momentum Investing:</em></p>
+    <ul style="text-align: center">
+      <li class="indent" style="font-size: 14px"><em><a target="_blank" href="https://www.fidelity.com/learning-center/trading-investing/trading/momentum-trading-strategies">Momentum trading strategies</a> | fidelity.com</em></li>
+      <li class="indent" style="font-size: 14px"><em><a target="_blank" href="https://anderson-review.ucla.edu/momentum/">Momentum Investing: It Works, But Why?</a> | anderson-review.ucla.edu </em></li>
+      <li class="indent" style="font-size: 14px"><em><a target="_blank" href="https://www.stern.nyu.edu/sites/default/files/assets/documents/con_038332.pdf">Momentum Crashes</a> | stern.nyu.edu</em></li>
+    </ul>
+  </div>
+  </body>
+
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <img src="{{url_for('static', filename='images/logo_portfolioquantum.png')}}" alt="Logo">
+        </div>
+        <div class="col-md-8">
+          <ul class="social-icons" style="padding-bottom: 9px; padding-top: 9px; float: right;">
+            <li style="float: left; margin-left: 0;"><a href="https://www.linkedin.com/in/sameer-dhoke/"><i class="fab fa-linkedin"></i></a></li>
+            <li style="float: left; margin-left: 10px;"><a href="https://github.com/sameerdhoke"><i class="fab fa-github"></i></a></li>
+            <li style="float: left; margin-left: 10px;"><a style= "color: #FFFFFF;" href="mailto:sameer.dhoke10@gmail.com">sameer.dhoke10@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</html>
